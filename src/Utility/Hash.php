@@ -876,14 +876,15 @@ class Hash
      * @param array $data The data to reduce.
      * @param string $path The path to extract from $data.
      * @param callable $function The function to call on each extracted value.
+     * @param mixed $initial Initial value for a reducer function
      * @return mixed The reduced value.
      * @link https://book.cakephp.org/3.0/en/core-libraries/hash.html#Cake\Utility\Hash::reduce
      */
-    public static function reduce(array $data, $path, $function)
+    public static function reduce(array $data, $path, $function, $initial = null)
     {
         $values = (array)static::extract($data, $path);
 
-        return array_reduce($values, $function);
+        return array_reduce($values, $function, $initial);
     }
 
     /**

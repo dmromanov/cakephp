@@ -2467,8 +2467,8 @@ class HashTest extends TestCase
     {
         $data = static::articleData();
 
-        $result = Hash::reduce($data, '{n}.Article.id', [$this, 'reduceCallback']);
-        $this->assertEquals(15, $result);
+        $result = Hash::reduce($data, '{n}.Article.id', [$this, 'reduceCallback'], 10);
+        $this->assertEquals(25, $result);
     }
 
     /**

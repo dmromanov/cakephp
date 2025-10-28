@@ -206,7 +206,7 @@ class CommandCollectionTest extends TestCase
      *
      * @return void
      */
-    public function testHas()
+    public function testHas(): void
     {
         $collection = new CommandCollection();
         $collection->add('routes', RoutesCommand::class);
@@ -218,7 +218,7 @@ class CommandCollectionTest extends TestCase
      *
      * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $collection = new CommandCollection();
         $collection->add('routes', RoutesCommand::class);
@@ -230,7 +230,7 @@ class CommandCollectionTest extends TestCase
      *
      * @return void
      */
-    public function testGetInvalid()
+    public function testGetInvalid(): void
     {
         $collection = new CommandCollection();
         $this->expectExceptionMessage('The `invalid` is not a known command name.');

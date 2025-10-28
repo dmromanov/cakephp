@@ -24,6 +24,8 @@ use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 
+use function Cake\Core\deprecationWarning;
+
 /**
  * Time Helper class for easy use of time data.
  *
@@ -226,11 +228,7 @@ class TimeHelper extends Helper
         bool $range = false,
     ): array|int {
         if ($range) {
-            trigger_error(
-                'Passing $range = true to TimeHelper::toQuarter() is deprecated. ' .
-                'Use TimeHelper::toQuarterRange() instead.',
-                E_USER_DEPRECATED,
-            );
+            deprecationWarning('5.3.0', 'Use TimeHelper::toQuarterRange() instead of passing $range = true.');
 
             return $this->toQuarterRange($dateString);
         }

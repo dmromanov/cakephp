@@ -210,8 +210,8 @@ class Socket
      */
     protected function _getStreamSocketClient(
         string $remoteSocketTarget,
-        int|null &$errNum,
-        string|null &$errStr,
+        ?int &$errNum,
+        ?string &$errStr,
         int $timeout,
         int $connectAs,
         $context,

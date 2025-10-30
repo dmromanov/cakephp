@@ -19,7 +19,9 @@ parameters:
 		- identifier: include.fileNotFound
 		- identifier: method.internalClass
 		- identifier: new.internalClass
-		- message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockBuilder\<Cake\\ORM\\Table\>\:\:addMethods\(\)\.$#'
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockBuilder\<Cake\\ORM\\Table\>\:\:addMethods\(\)\.$#'
+			reportUnmatched: false
 
 services:
 	-

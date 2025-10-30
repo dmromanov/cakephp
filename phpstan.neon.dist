@@ -11,16 +11,12 @@ parameters:
 	paths:
 		- src/
 	ignoreErrors:
-		-
-			identifier: missingType.iterableValue
-		-
-			identifier: missingType.generics
-		-
-			identifier: include.fileNotFound
-		-
-			identifier: method.internalClass
-		-
-			identifier: new.internalClass
+		- identifier: missingType.iterableValue
+		- identifier: missingType.generics
+		- identifier: include.fileNotFound
+		- identifier: method.internalClass
+		- identifier: new.internalClass
+		- identifier: unset.possiblyHookedProperty
 
 services:
 	-

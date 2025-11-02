@@ -7585,7 +7585,7 @@ class FormHelperTest extends TestCase
         ];
         $this->assertHtml($expected, $result);
 
-        $this->Form->setConfig('defaultPostLinkBlock');
+        $this->Form->deleteConfig('defaultPostLinkBlock');
     }
 
     /**

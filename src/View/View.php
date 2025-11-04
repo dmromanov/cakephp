@@ -1497,8 +1497,8 @@ class View implements EventDispatcherInterface
         }
         $layoutPaths = $this->_getSubPaths(static::TYPE_LAYOUT . DIRECTORY_SEPARATOR . $subDir);
 
-        foreach ($this->_paths($plugin) as $path) {
-            foreach ($layoutPaths as $layoutPath) {
+        foreach ($layoutPaths as $layoutPath) {
+            foreach ($this->_paths($plugin) as $path) {
                 yield $path . $layoutPath;
             }
         }
@@ -1534,8 +1534,8 @@ class View implements EventDispatcherInterface
     protected function getElementPaths(?string $plugin): Generator
     {
         $elementPaths = $this->_getSubPaths(static::TYPE_ELEMENT);
-        foreach ($this->_paths($plugin) as $path) {
-            foreach ($elementPaths as $subDir) {
+        foreach ($elementPaths as $subDir) {
+            foreach ($this->_paths($plugin) as $path) {
                 yield $path . $subDir . DIRECTORY_SEPARATOR;
             }
         }

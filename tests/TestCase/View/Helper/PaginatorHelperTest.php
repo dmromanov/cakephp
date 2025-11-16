@@ -26,6 +26,7 @@ use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Cake\View\Helper\PaginatorHelper;
 use Cake\View\View;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -3464,6 +3465,93 @@ class PaginatorHelperTest extends TestCase
             '/form',
         ];
         $this->assertHtml($expected, $out);
+    }
+
+    /**
+     * Test that limitControl() generates options based on steps
+     */
+    public function testLimitControlWithSteps(): void
+    {
+        $this->setPaginatedResult(['perPage' => 20, 'maxLimit' => 50]);
+
+        // Generate limits in steps of 10 up to maxLimit (50)
+        $out = $this->Paginator->limitControl([], null, ['steps' => 10]);
+        $expected = [
+            ['form' => ['method' => 'get', 'accept-charset' => 'utf-8', 'action' => '/']],
+            ['div' => ['class' => 'input select']],
+            ['label' => ['for' => 'limit']],
+            'View',
+            '/label',
+            ['select' => ['name' => 'limit', 'id' => 'limit', 'onChange' => 'this.form.requestSubmit()']],
+            ['option' => ['value' => '10']],
+            '10',
+            '/option',
+            ['option' => ['value' => '20', 'selected' => 'selected']],
+            '20',
+            '/option',
+            ['option' => ['value' => '30']],
+            '30',
+            '/option',
+            ['option' => ['value' => '40']],
+            '40',
+            '/option',
+            ['option' => ['value' => '50']],
+            '50',
+            '/option',
+            '/select',
+            '/div',
+            '/form',
+        ];
+        $this->assertHtml($expected, $out);
+    }
+
+    /**
+     * Test that limitControl() with steps uses 100 as default upper limit when no maxLimit
+     */
+    public function testLimitControlWithStepsNoMaxLimit(): void
+    {
+        $this->setPaginatedResult(['perPage' => 25]);
+
+        // Generate limits in steps of 25 up to default 100
+        $out = $this->Paginator->limitControl([], null, ['steps' => 25]);
+        $expected = [
+            ['form' => ['method' => 'get', 'accept-charset' => 'utf-8', 'action' => '/']],
+            ['div' => ['class' => 'input select']],
+            ['label' => ['for' => 'limit']],
+            'View',
+            '/label',
+            ['select' => ['name' => 'limit', 'id' => 'limit', 'onChange' => 'this.form.requestSubmit()']],
+            ['option' => ['value' => '25', 'selected' => 'selected']],
+            '25',
+            '/option',
+            ['option' => ['value' => '50']],
+            '50',
+            '/option',
+            ['option' => ['value' => '75']],
+            '75',
+            '/option',
+            ['option' => ['value' => '100']],
+            '100',
+            '/option',
+            '/select',
+            '/div',
+            '/form',
+        ];
+        $this->assertHtml($expected, $out);
+    }
+
+    /**
+     * Test that limitControl() throws exception when both steps and explicit limits are provided
+     */
+    public function testLimitControlWithStepsAndExplicitLimits(): void
+    {
+        $this->setPaginatedResult(['perPage' => 20]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot use both `steps` option and explicit `$limits` array');
+
+        // Should throw exception when using both steps and explicit limits
+        $this->Paginator->limitControl([20 => 20, 50 => 50], null, ['steps' => 10]);
     }
 
     /**

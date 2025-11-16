@@ -25,6 +25,7 @@ use Cake\View\Helper;
 use Cake\View\StringTemplate;
 use Cake\View\StringTemplateTrait;
 use Cake\View\View;
+use InvalidArgumentException;
 use function Cake\Core\h;
 use function Cake\I18n\__;
 
@@ -1167,29 +1168,21 @@ class PaginatorHelper extends Helper
      * Dropdown select for pagination limit.
      * This will generate a wrapping form.
      *
+     * Options:
+     *  - `steps`: If provided as an integer, will generate limit options in multiples of this value
+     *     up to maxLimit (e.g., steps of 10 with maxLimit 50 generates [10, 20, 30, 40, 50]).
+     *
      * @param array<string, string> $limits The options array.
      * @param int|null $default Default option for pagination limit. Defaults to `$this->param('perPage')`.
-     * @param array<string, mixed> $options Options for Select tag attributes like class, id or event
+     * @param array<string, mixed> $options Options for Select tag attributes like class, id or event. Or steps.
      * @return string html output.
      */
     public function limitControl(array $limits = [], ?int $default = null, array $options = []): string
     {
-        $limits = $limits ?: [
-            '20' => '20',
-            '50' => '50',
-            '100' => '100',
-        ];
+        $steps = $options['steps'] ?? null;
+        unset($options['steps']);
 
-        // Filter out limits that exceed maxLimit
-        $maxLimit = $this->param('maxLimit');
-        if ($maxLimit !== null) {
-            $limits = array_filter($limits, function ($limit) use ($maxLimit) {
-                return (int)$limit <= $maxLimit;
-            });
-            if (!$limits) {
-                $limits[$maxLimit] = (string)$maxLimit;
-            }
-        }
+        $limits = $this->prepareLimitOptions($limits, $steps);
 
         $default ??= $this->paginated()->perPage();
         $scope = $this->param('scope');
@@ -1238,6 +1231,57 @@ class PaginatorHelper extends Helper
         $out .= $this->Form->end();
 
         return $out;
+    }
+
+    /**
+     * Prepare and filter limit options for limitControl.
+     *
+     * Handles generating limits from steps, applying defaults, and filtering by maxLimit.
+     *
+     * @param array<string, string> $limits Explicit limit options
+     * @param int|null $steps If provided, generates limits in multiples of this value
+     * @return array<int|string, string> Prepared limit options
+     */
+    protected function prepareLimitOptions(array $limits, ?int $steps): array
+    {
+        // Generate limits based on steps if provided
+        if ($steps !== null) {
+            if ($limits !== []) {
+                throw new InvalidArgumentException(
+                    'Cannot use both `steps` option and explicit `$limits` array. ' .
+                    'Use one or the other.',
+                );
+            }
+
+            $maxLimit = $this->param('maxLimit');
+            $upperLimit = $maxLimit ?? 100;
+            $limits = [];
+            for ($i = $steps; $i <= $upperLimit; $i += $steps) {
+                $limits[$i] = (string)$i;
+            }
+
+            return $limits;
+        }
+
+        // Apply default limits if none provided
+        $limits = $limits ?: [
+            '20' => '20',
+            '50' => '50',
+            '100' => '100',
+        ];
+
+        // Filter out limits that exceed maxLimit
+        $maxLimit = $this->param('maxLimit');
+        if ($maxLimit !== null) {
+            $limits = array_filter($limits, function ($limit) use ($maxLimit) {
+                return (int)$limit <= $maxLimit;
+            });
+            if (!$limits) {
+                $limits[$maxLimit] = (string)$maxLimit;
+            }
+        }
+
+        return $limits;
     }
 
     /**

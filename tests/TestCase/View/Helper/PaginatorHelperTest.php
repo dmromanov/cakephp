@@ -3351,6 +3351,122 @@ class PaginatorHelperTest extends TestCase
     }
 
     /**
+     * Test that limitControl() filters out limits exceeding maxLimit
+     */
+    public function testLimitControlWithMaxLimit(): void
+    {
+        $this->setPaginatedResult(['perPage' => 20, 'maxLimit' => 50]);
+
+        $out = $this->Paginator->limitControl([20 => 20, 50 => 50, 100 => 100, 200 => 200]);
+        $expected = [
+            ['form' => ['method' => 'get', 'accept-charset' => 'utf-8', 'action' => '/']],
+            ['div' => ['class' => 'input select']],
+            ['label' => ['for' => 'limit']],
+            'View',
+            '/label',
+            ['select' => ['name' => 'limit', 'id' => 'limit', 'onChange' => 'this.form.requestSubmit()']],
+            ['option' => ['value' => '20', 'selected' => 'selected']],
+            '20',
+            '/option',
+            ['option' => ['value' => '50']],
+            '50',
+            '/option',
+            '/select',
+            '/div',
+            '/form',
+        ];
+        $this->assertHtml($expected, $out);
+    }
+
+    /**
+     * Test that limitControl() uses default limits when maxLimit filters them all out
+     */
+    public function testLimitControlWithLowMaxLimit(): void
+    {
+        $this->setPaginatedResult(['perPage' => 10, 'maxLimit' => 25]);
+
+        // Default limits are 20, 50, 100 - with maxLimit 25, only 20 should remain
+        $out = $this->Paginator->limitControl();
+        $expected = [
+            ['form' => ['method' => 'get', 'accept-charset' => 'utf-8', 'action' => '/']],
+            ['div' => ['class' => 'input select']],
+            ['label' => ['for' => 'limit']],
+            'View',
+            '/label',
+            ['select' => ['name' => 'limit', 'id' => 'limit', 'onChange' => 'this.form.requestSubmit()']],
+            ['option' => ['value' => '20']],
+            '20',
+            '/option',
+            '/select',
+            '/div',
+            '/form',
+        ];
+        $this->assertHtml($expected, $out);
+    }
+
+    /**
+     * Test that limitControl() works normally when no maxLimit is set
+     */
+    public function testLimitControlWithoutMaxLimit(): void
+    {
+        $this->setPaginatedResult(['perPage' => 20]);
+
+        // Without maxLimit, all provided limits should be available
+        $out = $this->Paginator->limitControl([20 => 20, 50 => 50, 100 => 100, 200 => 200]);
+        $expected = [
+            ['form' => ['method' => 'get', 'accept-charset' => 'utf-8', 'action' => '/']],
+            ['div' => ['class' => 'input select']],
+            ['label' => ['for' => 'limit']],
+            'View',
+            '/label',
+            ['select' => ['name' => 'limit', 'id' => 'limit', 'onChange' => 'this.form.requestSubmit()']],
+            ['option' => ['value' => '20', 'selected' => 'selected']],
+            '20',
+            '/option',
+            ['option' => ['value' => '50']],
+            '50',
+            '/option',
+            ['option' => ['value' => '100']],
+            '100',
+            '/option',
+            ['option' => ['value' => '200']],
+            '200',
+            '/option',
+            '/select',
+            '/div',
+            '/form',
+        ];
+        $this->assertHtml($expected, $out);
+    }
+
+    /**
+     * Test that limitControl() adds maxLimit as option when all limits are filtered out
+     */
+    public function testLimitControlWithMaxLimitBelowAllDefaults(): void
+    {
+        $this->setPaginatedResult(['perPage' => 10, 'maxLimit' => 10]);
+
+        // Default limits are 20, 50, 100 - all exceed maxLimit of 10
+        // Should fallback to showing maxLimit (10) as the only option
+        $out = $this->Paginator->limitControl();
+        $expected = [
+            ['form' => ['method' => 'get', 'accept-charset' => 'utf-8', 'action' => '/']],
+            ['div' => ['class' => 'input select']],
+            ['label' => ['for' => 'limit']],
+            'View',
+            '/label',
+            ['select' => ['name' => 'limit', 'id' => 'limit', 'onChange' => 'this.form.requestSubmit()']],
+            ['option' => ['value' => '10', 'selected' => 'selected']],
+            '10',
+            '/option',
+            '/select',
+            '/div',
+            '/form',
+        ];
+        $this->assertHtml($expected, $out);
+    }
+
+    /**
      * Test using paging params set by SimplePaginator which doesn't do count query.
      */
     public function testMethodsWhenThereIsNoPageCount(): void

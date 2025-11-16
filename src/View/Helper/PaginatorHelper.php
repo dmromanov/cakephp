@@ -1179,6 +1179,18 @@ class PaginatorHelper extends Helper
             '50' => '50',
             '100' => '100',
         ];
+
+        // Filter out limits that exceed maxLimit
+        $maxLimit = $this->param('maxLimit');
+        if ($maxLimit !== null) {
+            $limits = array_filter($limits, function ($limit) use ($maxLimit) {
+                return (int)$limit <= $maxLimit;
+            });
+            if (!$limits) {
+                $limits[$maxLimit] = (string)$maxLimit;
+            }
+        }
+
         $default ??= $this->paginated()->perPage();
         $scope = $this->param('scope');
         assert($scope === null || is_string($scope));

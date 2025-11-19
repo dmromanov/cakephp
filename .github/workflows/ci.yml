@@ -240,7 +240,7 @@ jobs:
 
       - name: Run phpcs
         if: always()
-        run: vendor/bin/phpcs --parallel=4 --report=checkstyle | cs2pr
+        run: vendor/bin/phpcs --parallel=16 --report=checkstyle | cs2pr
 
       - name: Run phpstan for tests
         if: env.PHPSTAN_TESTS

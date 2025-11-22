@@ -133,6 +133,12 @@ parameters:
 			path: src/Database/Expression/WhenThenExpression.php
 
 		-
+			message: '#^Dead catch \- InvalidArgumentException is never thrown in the try block\.$#'
+			identifier: catch.neverThrown
+			count: 1
+			path: src/Database/Type/DateTimeType.php
+
+		-
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
 			count: 1
@@ -371,6 +377,18 @@ parameters:
 			identifier: trait.unused
 			count: 1
 			path: src/Mailer/MailerAwareTrait.php
+
+		-
+			message: '#^Parameter &\$errNum by\-ref type of method Cake\\Network\\Socket\:\:_getStreamSocketClient\(\) expects int, int\|null given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: src/Network/Socket.php
+
+		-
+			message: '#^Parameter &\$errStr by\-ref type of method Cake\\Network\\Socket\:\:_getStreamSocketClient\(\) expects string, string\|null given\.$#'
+			identifier: parameterByRef.type
+			count: 1
+			path: src/Network/Socket.php
 
 		-
 			message: '#^Call to function method_exists\(\) with Cake\\Datasource\\EntityInterface and ''patch'' will always evaluate to true\.$#'
@@ -643,7 +661,7 @@ parameters:
 			path: src/TestSuite/TestCase.php
 
 		-
-			message: '#^Unable to resolve the template type T in call to method static method Cake\\Utility\\Hash\:\:insert\(\)$#'
+			message: '#^Unable to resolve the template type T in call to static method Cake\\Utility\\Hash\:\:insert\(\)$#'
 			identifier: argument.templateType
 			count: 1
 			path: src/Utility/Hash.php

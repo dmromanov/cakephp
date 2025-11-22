@@ -31,24 +31,6 @@ parameters:
 			path: src/Cache/Engine/RedisEngine.php
 
 		-
-			message: '#^Call to an undefined method Redis\|RedisCluster\:\:unlink\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/Cache/Engine/RedisEngine.php
-
-		-
-			message: '#^Method RedisCluster\:\:scan\(\) invoked with 4 parameters, 1\-3 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Cache/Engine/RedisEngine.php
-
-		-
-			message: '#^Parameter \#3 \$pattern of method RedisCluster\:\:scan\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Cache/Engine/RedisEngine.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, TValue\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -377,18 +359,6 @@ parameters:
 			identifier: trait.unused
 			count: 1
 			path: src/Mailer/MailerAwareTrait.php
-
-		-
-			message: '#^Parameter &\$errNum by\-ref type of method Cake\\Network\\Socket\:\:_getStreamSocketClient\(\) expects int, int\|null given\.$#'
-			identifier: parameterByRef.type
-			count: 1
-			path: src/Network/Socket.php
-
-		-
-			message: '#^Parameter &\$errStr by\-ref type of method Cake\\Network\\Socket\:\:_getStreamSocketClient\(\) expects string, string\|null given\.$#'
-			identifier: parameterByRef.type
-			count: 1
-			path: src/Network/Socket.php
 
 		-
 			message: '#^Call to function method_exists\(\) with Cake\\Datasource\\EntityInterface and ''patch'' will always evaluate to true\.$#'

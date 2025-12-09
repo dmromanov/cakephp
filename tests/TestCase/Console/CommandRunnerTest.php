@@ -126,23 +126,18 @@ class CommandRunnerTest extends TestCase
     }
 
     /**
-     * Test that running an unknown command gives suggestions.
+     * Test that running a command prefix shows help for those commands.
      */
-    public function testRunInvalidCommandSuggestion(): void
+    public function testRunCommandPrefixShowsHelp(): void
     {
         $output = new StubConsoleOutput();
         $runner = $this->getRunner();
-        $runner->run(['cake', 'cache'], $this->getMockIo($output));
+        $result = $runner->run(['cake', 'cache'], $this->getMockIo($output));
 
+        $this->assertSame(0, $result);
         $messages = implode("\n", $output->messages());
-        $this->assertStringContainsString(
-            "Did you mean: `cache clear`?\n" .
-            "\n" .
-            "Other valid choices:\n" .
-            "\n" .
-            '- help',
-            $messages,
-        );
+        $this->assertStringContainsString('cache clear', $messages);
+        $this->assertStringContainsString('cache list', $messages);
     }
 
     /**
@@ -417,7 +412,7 @@ class CommandRunnerTest extends TestCase
     }
 
     /**
-     * Test that run() fires off the Command.started and Command.finished events.
+     * Test that run() fires off the Command.beforeExecute and Command.afterExecute events.
      */
     public function testRunTriggersCommandEvents(): void
     {
@@ -425,14 +420,16 @@ class CommandRunnerTest extends TestCase
         $runner = $this->getRunner();
         $startedEventTriggered = false;
         $finishedEventTriggered = false;
-        $runner->getEventManager()->on('Command.beforeExecute', function ($event, $args) use (&$startedEventTriggered): void {
+        $runner->getEventManager()->on('Command.beforeExecute', function ($event, $args, $io) use (&$startedEventTriggered): void {
             $this->assertInstanceOf(VersionCommand::class, $event->getSubject());
             $this->assertInstanceOf(Arguments::class, $args);
+            $this->assertInstanceOf(ConsoleIo::class, $io);
             $startedEventTriggered = true;
         });
-        $runner->getEventManager()->on('Command.afterExecute', function ($event, $args, $result) use (&$finishedEventTriggered): void {
+        $runner->getEventManager()->on('Command.afterExecute', function ($event, $args, $io, $result) use (&$finishedEventTriggered): void {
             $this->assertInstanceOf(VersionCommand::class, $event->getSubject());
             $this->assertInstanceOf(Arguments::class, $args);
+            $this->assertInstanceOf(ConsoleIo::class, $io);
             $this->assertEquals(CommandInterface::CODE_SUCCESS, $result);
             $finishedEventTriggered = true;
         });

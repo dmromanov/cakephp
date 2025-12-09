@@ -91,6 +91,21 @@ class HelpCommandTest extends TestCase
         $this->assertOutputContains('To run a command', 'more info present');
         $this->assertOutputContains('To get help', 'more info present');
         $this->assertOutputContains('This is a demo command', 'command description missing');
+        $this->assertOutputContains('<info>custom_group</info>');
+        $this->assertOutputContains('- grouped');
+    }
+
+    /**
+     * Test filtering by command prefix
+     */
+    public function testFilterByPrefix(): void
+    {
+        $this->exec('help cache');
+        $this->assertExitCode(CommandInterface::CODE_SUCCESS);
+        $this->assertOutputContains('cache clear');
+        $this->assertOutputContains('cache list');
+        $this->assertOutputNotContains('routes');
+        $this->assertOutputNotContains('sample');
     }
 
     /**

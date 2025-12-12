@@ -103,7 +103,10 @@ class CompletionCommandTest extends TestCase
      */
     public function testCommandsExcludesPluginAliasesForDuplicates(): void
     {
-        $this->exec('completion commands');
+        // Removed the deprecated() wrapping when plugin class is added to TestPluginTwo
+        $this->deprecated(function (): void {
+            $this->exec('completion commands');
+        });
         $this->assertExitCode(CommandInterface::CODE_SUCCESS);
 
         // Plugin-prefixed aliases should be excluded when they point to the
@@ -126,7 +129,10 @@ class CompletionCommandTest extends TestCase
      */
     public function testCommandsIncludesPluginAliasesInVerboseMode(): void
     {
-        $this->exec('completion commands -v');
+        // Removed the deprecated() wrapping when plugin class is added to TestPluginTwo
+        $this->deprecated(function (): void {
+            $this->exec('completion commands -v');
+        });
         $this->assertExitCode(CommandInterface::CODE_SUCCESS);
 
         // Plugin-prefixed aliases should be in the output in verbose mode

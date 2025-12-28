@@ -105,13 +105,13 @@ class TextHelper extends Helper
 
         $text = (string)preg_replace_callback(
             $pattern,
-            [&$this, '_insertPlaceHolder'],
+            $this->_insertPlaceHolder(...),
             $text,
         );
         // phpcs:disable Generic.Files.LineLength
         $text = preg_replace_callback(
             '#(?<!href="|">)(?<!\b[[:punct:]])(?<!http://|https://|ftp://|nntp://)www\.[^\s\n\%\ <]+[^\s<\n\%\,\.\ ](?<!\))#i',
-            [&$this, '_insertPlaceHolder'],
+            $this->_insertPlaceHolder(...),
             $text,
         );
         // phpcs:enable Generic.Files.LineLength

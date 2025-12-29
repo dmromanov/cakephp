@@ -241,7 +241,7 @@ class TextHelper extends Helper
         $atom = '[\p{L}0-9!#$%&\'*+\/=?^_`{|}~-]';
         $text = preg_replace_callback(
             '/(?<=\s|^|\(|\>|\;)(' . $atom . '*(?:\.' . $atom . '+)*@[\p{L}0-9-]+(?:\.[\p{L}0-9-]+)+)/ui',
-            [&$this, '_insertPlaceholder'],
+            $this->_insertPlaceholder(...),
             $text,
         );
         if ($options['escape']) {

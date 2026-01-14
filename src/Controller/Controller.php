@@ -474,6 +474,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
     public function getAction(): Closure
     {
         $request = $this->request;
+        /** @var string $action */
         $action = $request->getParam('action');
         $controller = $this->name . 'Controller';
 

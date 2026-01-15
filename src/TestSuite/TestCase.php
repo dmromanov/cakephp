@@ -191,7 +191,7 @@ abstract class TestCase extends BaseTestCase
                 &$deprecation,
                 $type,
             ): bool {
-                if ($code == $type) {
+                if ($code === $type) {
                     $deprecation = true;
 
                     return true;
